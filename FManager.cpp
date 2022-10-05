@@ -246,7 +246,9 @@ void LeafMenu::draw()
 	break;
 	case Function::Off:
 	{
+		//wait exit
 		is_exit->store(true);
+		std::this_thread::sleep_for(10ms);
 	}
 	break;
 	default:
@@ -369,7 +371,9 @@ void FManager::_key_viewer()
 #endif
 
 		if (_exit_app.load())
+		{
 			return;
+		}
 
 		if (current_item->isPause())
 		{
