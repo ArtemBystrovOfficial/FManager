@@ -396,7 +396,7 @@ void FManager::_key_viewer()
 		is_command=true;	
 		switch (getch())
 		{
-#ifdef WIN32
+#ifndef WIN32
 			//UP
 		case 72: {  _keyUp(); }break;
 
