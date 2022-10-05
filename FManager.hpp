@@ -20,14 +20,12 @@
 #endif
 
 // console frame symbols
+
 #ifdef WIN32
-const uint8_t sim1 = 213,sim2 = 184,sim3 = 190,sim4 = 212,sim5 = 205,sim6 = 196;
+void printN(const unsigned char & ch, int count);
 #else
-const uint8_t sim1 = '=',sim2 = '=',sim3 = '=',sim4 = '=',sim5 = '=',sim6 = '-';
+void printN(char* ch, int count);
 #endif
-
-void printN(const unsigned char& ch, int count);
-
 
 void drawMenuFrame(const std::string& str, bool is_active);
 

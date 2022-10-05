@@ -2,11 +2,33 @@
 
 bool log_active = false;
 
-void printN(const unsigned char& ch, int count)
+#ifdef WIN32
+
+unsigned char sim1 = 213, sim2 = 184,  sim3 = 190,  sim4 = 212, sim5 = 205,
+ sim6 = ' ',sim7 = ' ', sim8 = ' ', sim9 = ' ', sim10 = 196;
+
+#else
+
+char* sim1 = "\u250E", * sim2 = "\u2512", * sim3 = "\u251A", * sim4 = "\u2515", * sim5 = "\u2501",
+* sim6 = "\u250C", * sim7 = "\u2510", * sim8 = "\u2518", * sim9 = "\u2514", * sim10 = "\u2500";
+
+#endif
+
+#ifdef WIN32
+
+void printN(const unsigned char & ch, int count)
 {
 	for (int i = 0; i < count; i++)
 		std::cout << ch;
 }
+
+#else
+void printN(char * ch , int count)
+{
+	for (int i = 0; i < count; i++)
+		std::cout << ch;
+}
+#endif
 
 #ifndef  WIN32
 
@@ -42,15 +64,15 @@ void drawMenuFrame(const std::string& str, bool is_active)
 	}
 	else
 	{
-		std::cout << " "; printN(sim6, 16); std::cout << " \n";
+		std::cout << sim6; printN(sim10, 16); std::cout << sim7 << "\n";
 		std::cout << " ";
 		int space = (16 - str.size()) / 2;
 		for (int i = 0; i < space; i++)std::cout << " ";
 		std::cout << str;
 		for (int i = 0; i < space; i++)std::cout << " ";
 		if (space * 2 + str.size() != 16)std::cout << " ";
-		std::cout << " \n ";
-		printN(sim6, 16); std::cout << " \n";
+		std::cout << " \n";
+		std::cout << sim9; printN(sim10, 16); std::cout << sim8 << "\n";
 	}
 }
 
@@ -85,12 +107,12 @@ void LeafMenu::draw()
 	case Function::OnlineList:
 	{
 		// Logo
-		printN(' ', 3);
+		std::cout << "   ";
 		std::cout << "Online List";
 		std::cout << std::endl;
-		printN(' ', 1);
+		std::cout << " ";
 		printN(sim6, 16);
-		printN(' ', 1);
+		std::cout << " ";
 		std::cout << std::endl << std::endl;
 
 		// Logo end
@@ -175,12 +197,12 @@ void LeafMenu::draw()
 	case Function::BanList:
 	{
 		// Logo
-		printN(' ', 5);
+		std::cout << "     ";
 		std::cout << "Ban List";
 		std::cout << std::endl;
-		printN(' ', 1);
+		std::cout << " ";
 		printN(sim6, 16);
-		printN(' ', 1);
+		std::cout << " ";
 		std::cout << std::endl << std::endl;
 
 		// Logo end
@@ -227,12 +249,12 @@ void LeafMenu::draw()
 	{
 
 		// Logo
-		printN(' ', 5);
+		std::cout << "     ";
 		std::cout << "Groups List";
 		std::cout << std::endl;
-		printN(' ', 1);
+		std::cout << " ";
 		printN(sim6, 16);
-		printN(' ', 1);
+		std::cout << " ";
 		std::cout << std::endl << std::endl;
 
 		auto list = server->getGroups();
@@ -397,7 +419,7 @@ void FManager::_key_viewer()
 		is_command=true;	
 		switch (getch())
 		{
-#ifndef WIN32
+#ifdef WIN32
 			//UP
 		case 72: {  _keyUp(); }break;
 
