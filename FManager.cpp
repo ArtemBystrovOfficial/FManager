@@ -335,8 +335,6 @@ void FManager::_key_viewer()
 	while (!_exit_app.load())
 	{
 
-#ifdef _WIN32
-
 		system("cls");
 
 		current_item->draw();
@@ -364,14 +362,6 @@ void FManager::_key_viewer()
 			//ESCAPE
 		case 27: {  _keyEscape(); }break;
 		}
-
-#else
-
-
-
-#endif
-
-	}
 
 	std::cout << std::endl << "ENTER - Refresh/Entry | ESC - Return\n";
 
