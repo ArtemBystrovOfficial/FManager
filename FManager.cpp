@@ -9,8 +9,8 @@ unsigned char sim1 = 213, sim2 = 184,  sim3 = 190,  sim4 = 212, sim5 = 205,
 
 #else
 
-char* sim1 = "\u2552", * sim2 = "\u2555", * sim3 = "\u255B", * sim4 = "\u2558", * sim5 = "\u2550",
-* sim6 = "\u250C", * sim7 = "\u2510", * sim8 = "\u2518", * sim9 = "\u2514", * sim10 = "\u2500";
+char* sim1 = "\u250C", * sim2 = "\u2510", * sim3 = "\u2518", * sim4 = "\u2514", * sim5 = "\u2500",
+* sim6 = "\u2500", * sim7 = "\u2500", * sim8 = "\u2500", * sim9 = "\u2500", * sim10 = "\u2500";
 
 #endif
 
