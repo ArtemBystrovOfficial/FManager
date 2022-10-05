@@ -363,8 +363,9 @@ void FManager::_key_viewer()
 		case 27: {  _keyEscape(); }break;
 		}
 
-	std::cout << std::endl << "ENTER - Refresh/Entry | ESC - Return\n";
+		std::cout << std::endl << "ENTER - Refresh/Entry | ESC - Return\n";
 
+	}
 }
 
 
