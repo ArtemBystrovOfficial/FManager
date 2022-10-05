@@ -364,9 +364,9 @@ void FManager::_key_viewer()
 	//Pattern brige on compile
 
 	bool is_command=true;
-
 	while (!_exit_app.load())
 	{
+		
 		if(is_command)
 		{
 #ifdef WIN32
@@ -389,6 +389,7 @@ void FManager::_key_viewer()
 
 		if (current_item->isPause())
 		{
+
 			_keyEscape();
 			continue;
 		}
@@ -427,7 +428,6 @@ void FManager::_key_viewer()
 					
 		
 		}
-
 
 	}
 }
