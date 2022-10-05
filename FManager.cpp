@@ -9,7 +9,7 @@ unsigned char sim1 = 213, sim2 = 184,  sim3 = 190,  sim4 = 212, sim5 = 205,
 
 #else
 
-char* sim1 = "\u250E", * sim2 = "\u2512", * sim3 = "\u251A", * sim4 = "\u2515", * sim5 = "\u2501",
+char* sim1 = "\u2552", * sim2 = "\u2555", * sim3 = "\u255B", * sim4 = "\u2558", * sim5 = "\u2550",
 * sim6 = "\u250C", * sim7 = "\u2510", * sim8 = "\u2518", * sim9 = "\u2514", * sim10 = "\u2500";
 
 #endif
