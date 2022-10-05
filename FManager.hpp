@@ -4,39 +4,23 @@
 #include <memory>
 #include <algorithm>
 #include <iostream>
+#include <thread>
 
 #ifdef  WIN32
 #include <conio.h>
 #endif
 
-void drawMenuFrame(const std::string& str,bool is_active)
-{
+// console frame symbols
+const uint8_t sim1 = 213,sim2 = 184,sim3 = 190,sim4 = 212,sim5 = 205,sim6 = 196;
 
-	if (is_active)
-	{
-		std::cout << "╔════════════════╗\n";
-		std::cout << "║";
-		int space = (16 - str.size()) / 2;
-		for (int i = 0; i < space; i++)std::cout << " ";
-		std::cout << str;
-		for (int i = 0; i < space; i++)std::cout << " ";
-		if (space * 2 + str.size() != 16)std::cout << " ";
-		std::cout << "║\n";
-		std::cout << "╚════════════════╝\n";
-	}
-	else
-	{
-		std::cout << "------------------\n";
-		std::cout << "|";
-		int space = (16 - str.size()) / 2;
-		for (int i = 0; i < space; i++)std::cout << " ";
-		std::cout << str;
-		for (int i = 0; i < space; i++)std::cout << " ";
-		if (space * 2 + str.size() != 16)std::cout << " ";
-		std::cout << "|\n";
-		std::cout << "------------------\n";
-	}
-}
+void printN(const unsigned char& ch, int count);
+
+
+void drawMenuFrame(const std::string& str, bool is_active);
+
+/////////////////////////////////////////////
+// AUTOMATIC garbage collector of childerns
+/////////////////////////////////////////////
 
 class CompositionMenu
 {
@@ -45,9 +29,7 @@ public:
 	CompositionMenu(const std::string & name) : name(name)
 	{}
 
-	virtual void addChild(std::shared_ptr < CompositionMenu > ptr){}
-
-	void setParrent(std::shared_ptr < CompositionMenu > ptr) {
+	void setParrent(CompositionMenu* ptr) {
 		parrent = ptr;
 	}
 
@@ -57,25 +39,29 @@ public:
 	virtual void Up(){}
 	virtual void Down(){}
 
-	virtual std::shared_ptr < CompositionMenu >  In() = 0;
+	virtual CompositionMenu * In() = 0;
+    virtual CompositionMenu * Out() = 0;
 
-	std::shared_ptr < CompositionMenu > Out()
+	//custom options
+	virtual bool isPause() { return false; };
+	virtual bool isLog() { return false; };
+
+	void setName(const std::string& name)
 	{
-		if (parrent.get() != nullptr)
-			return parrent;
-		else
-			return std::make_shared< CompositionMenu >(this);
+		this->name = name;
 	}
 
-	std::string getName()
+	std::string & getName()
 	{
 		return name;
 	}
+	virtual ~CompositionMenu(){}
 protected:
 
 	std::string name;
 
-	std::shared_ptr <CompositionMenu> parrent;
+	CompositionMenu * parrent;
+
 };
 
 class CompositorMenu : public CompositionMenu
@@ -87,9 +73,9 @@ public:
 		
 	}
 
-	void addChild(std::shared_ptr <CompositionMenu> ptr) override
+	void addChild(CompositionMenu * ptr) 
 	{
-		ptr->setParrent(parrent);
+		ptr->setParrent(this);
 		items.push_back(ptr);
 	}
 
@@ -116,15 +102,31 @@ public:
 		if(active_item != items.size()-1)
 			active_item++;
 	}
-	std::shared_ptr < CompositionMenu > In() override
+
+	 CompositionMenu * In() override
 	{
 		return items.at(active_item);
 	}
 
+	CompositionMenu * Out() override
+	{
+		if (parrent != nullptr)
+			return parrent;
+		else
+			return this;
+	}
+
+	virtual ~CompositorMenu() 
+	{
+		for (int i = 0; i < items.size(); i++)
+		{
+			delete items[i];
+		}
+	}
 private:
 
 	// service
-	std::vector < std::shared_ptr < CompositionMenu > > items;
+	std::vector <  CompositionMenu * > items;
 
 	int active_item = 0;
 };
@@ -135,44 +137,85 @@ public:
 	enum class Function
 	{
 		none,
-		Ban
+		Logs,
+		Pause,
+		OnlineList,
+		FidIp,
+		BanIp,
+		UnbanIp,
+		BanList,
+		AddtoGroup,
+		NewGroup,
+		ListGroup,
+		Refresh,
+		Off
 	};
 
-	LeafMenu(const std::string& name, Function&& func) : CompositionMenu(name),  func(func)
-	{
-	
-	}
+	LeafMenu(const std::string& name, Function&& func, FServer<MainPocket>* server)
+		: CompositionMenu(name), func(func), server(server) {}
 
 	bool isLeaf() override
 	{
 		return true;
 	}
-	void draw() override
+
+	bool isPause() override
 	{
-		// draw functions
-	}
-	std::shared_ptr < CompositionMenu > In() override
-	{
-		return std::make_shared< CompositionMenu >(this);
+		return func == Function::Pause;
 	}
 
+	virtual bool isLog()
+	{
+		return func == Function::Logs;
+	}
+
+	void draw() override;
+
+	CompositionMenu * In() override
+	{
+		return nullptr;
+	}
+
+	CompositionMenu * Out() override
+	{
+		if (parrent != nullptr)
+			return parrent;
+		else
+			return this;
+	}
+
+	void setExitCondition(std::atomic<bool> * is_exit)
+	{
+		this->is_exit = is_exit;
+	}
+
+	virtual ~LeafMenu() = default;
 private:
+
+	std::atomic<bool> * is_exit;
+
+	FServer <MainPocket> * server;
+
 	Function func = Function::none;
 };
 
-template <class Pocket>
 struct FManager
 {
 public:
+	FManager(const FManager &) = delete;
+	FManager(FManager &&) = default;
+
 	FManager(const std::string& ip, int port);
 
 	int exec();
+
+	~FManager();
 
 private:
 
 	void menuSetting();
 
-	bool realisationOfCLogic();
+	void realisationOfCLogic();
 
 	void _key_viewer();
 
@@ -181,137 +224,14 @@ private:
 	void _keyEnter();
 	void _keyEscape();
 
-	std::shared_ptr <CompositionMenu> current_item;
-	std::shared_ptr <CompositorMenu> main_menu;
+private:
+	CompositionMenu * current_item;
+	std::unique_ptr <CompositorMenu> main_menu;
 
-	FServer <Pocket>  srv;
-	int current_position;
+	FServer <MainPocket> * srv;
+	std::thread run;
 
+	std::atomic <bool> _exit_app = false;
+	
 };
 
-template <class Pocket>
-void FManager<Pocket>::menuSetting()
-{
-	auto lf1 = std::make_shared<LeafMenu>("Pause", LeafMenu::Function::none);
-
-	auto comp1 = std::make_shared<CompositorMenu>("Online");
-	auto lf11 = std::make_shared<LeafMenu>("Online list", LeafMenu::Function::none);
-	auto lf12 = std::make_shared<LeafMenu>("Fid IP", LeafMenu::Function::none);
-
-	auto comp2 = std::make_shared<CompositorMenu>("Bans");
-	auto lf21 = std::make_shared<LeafMenu>("Ban IP", LeafMenu::Function::none);
-	auto lf22 = std::make_shared<LeafMenu>("Unban IP", LeafMenu::Function::none);
-	auto lf23 = std::make_shared<LeafMenu>("Ban List", LeafMenu::Function::none);
-
-	auto comp3 = std::make_shared<CompositorMenu>("Groups");
-	auto lf31 = std::make_shared<LeafMenu>("Add to group", LeafMenu::Function::none);
-	auto lf32 = std::make_shared<LeafMenu>("New group", LeafMenu::Function::none);
-	auto lf33 = std::make_shared<LeafMenu>("List groups", LeafMenu::Function::none);
-
-	auto lf2 = std::make_shared<LeafMenu>("Refresh", LeafMenu::Function::none);
-
-	auto lf3 = std::make_shared<LeafMenu>("Off", LeafMenu::Function::none);
-
-	comp1->addChild(lf11);
-	comp1->addChild(lf12);
-
-	comp2->addChild(lf21);
-	comp2->addChild(lf22);
-	comp2->addChild(lf23);
-
-	comp3->addChild(lf31);
-	comp3->addChild(lf32);
-	comp3->addChild(lf33);
-
-	current_item->addChild(lf1);
-	current_item->addChild(comp1);
-	current_item->addChild(comp2);
-	current_item->addChild(comp3);
-	current_item->addChild(lf2);
-	current_item->addChild(lf3);
-}
-
-template<class Pocket>
-inline FManager<Pocket>::FManager(const std::string& ip, int port):
-srv(ip, port),
-main_menu(std::make_shared<CompositorMenu>("Main"))
-{
-	current_item = main_menu;
-}
-
-template<class Pocket>
-inline int FManager<Pocket>::exec()
-{
-	_key_viewer();
-	return 0;
-}
-
-
-/////////////////////
-// You're code there
-/////////////////////
-
-//return if your server have some problems
-template<class Pocket>
-inline bool FManager<Pocket>::realisationOfCLogic()
-{
-	return false;
-}
-
-template<class Pocket>
-inline void FManager<Pocket>::_key_viewer()
-{
-	// realistation of your platform
-	// keys of menu
-
-//Pattern brige on compile
-#ifdef  WIN32
-
-	current_item->draw();
-
-	switch (getch())
-	{
-		//UP
-		case 72:{  _keyUp(); }break;
-
-		//RIGHT
-		case 77:{  _keyDown(); }break;
-
-		//ENTER
-		case 13:{  _keyEnter(); }break;
-
-		//ESCAPE
-		case 8: {  _keyEscape(); }break;
-	}
-
-#else
-
-
-
-#endif
-
-}
-
-template<class Pocket>
-inline void FManager<Pocket>::_keyUp()
-{
-	current_item->Up();
-}
-
-template<class Pocket>
-inline void FManager<Pocket>::_keyDown()
-{
-	current_item->Down();
-}
-
-template<class Pocket>
-inline void FManager<Pocket>::_keyEnter()
-{
-	current_item = current_item->In();
-}
-
-template<class Pocket>
-inline void FManager<Pocket>::_keyEscape()
-{
-	current_item = current_item->Out();
-}

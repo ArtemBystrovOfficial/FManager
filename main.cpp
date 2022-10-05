@@ -9,7 +9,7 @@ int main(int argc, char ** argv)
 {
 	std::string ip;
 	int port = -1;
-/*
+
 	for ( int i = 1; i!=argc; ++i )
 	{
 		
@@ -60,11 +60,12 @@ int main(int argc, char ** argv)
 	}
 
 	// extra safe
-	if (ip.size() < 8 || ip.size() > 15 || port == -1)
+	if (ip.size() < 7 || ip.size() > 15 || port == -1 || std::count(ip.begin(), ip.end(), '.')!=3);
 	{
 		printHelp();
+		exit(0);
 	}
-*/
-	FManager<MainPocket> manage(ip,port);
-	manage.exec();
+
+	FManager manage(ip, port);
+	return manage.exec();
 }
