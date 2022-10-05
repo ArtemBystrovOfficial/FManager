@@ -137,6 +137,9 @@ void LeafMenu::draw()
 
 		std::cin >> str;
 
+		std::cin.clear(); //clear bad input flag
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
 		if (str.size() >= 7 && str.size() <= 14 && std::count(str.begin(), str.end(), '.') == 3)
 		{
 			std::cout << "OK\n";
@@ -153,6 +156,9 @@ void LeafMenu::draw()
 		std::cout << "Unban IP: ";
 
 		std::cin >> str;
+
+		std::cin.clear(); //clear bad input flag
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 		if (str.size() >= 7 && str.size() <= 14 && std::count(str.begin(), str.end(), '.') == 3)
 		{
@@ -194,9 +200,15 @@ void LeafMenu::draw()
 
 		std::cin >> fid;
 
+		std::cin.clear(); //clear bad input flag
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
 		std::cout << "At group: ";
 
 		std::cin >> gid;
+
+		std::cin.clear(); //clear bad input flag
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 		if (server->addToGroup(gid, fid))
 			std::cout << "Ok [ENTER] or [ESC]\n";
