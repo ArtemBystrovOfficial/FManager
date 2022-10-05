@@ -349,12 +349,24 @@ void FManager::_key_viewer()
 
 	//Pattern brige on compile
 
+	bool is_command=true;
+
 	while (!_exit_app.load())
 	{
-
+		if(is_command)
+		{
+#ifdef WIN32
 		system("cls");
-
+#else
+		system("clear");
+#endif
 		current_item->draw();
+#ifdef WIN32
+		std::cout << std::endl << "ENTER - Refresh/Entry | ESC - Return | UP / DOWN - MOVE \n";
+#else
+		
+		std::cout << std::endl << "ENTER - Refresh/Entry | ESC - Return | W / S - MOVE \n";
+#endif
 
 		if (_exit_app.load())
 			return;
@@ -364,9 +376,11 @@ void FManager::_key_viewer()
 			_keyEscape();
 			continue;
 		}
-
+		}
+		is_command=true;	
 		switch (getch())
 		{
+#ifdef WIN32
 			//UP
 		case 72: {  _keyUp(); }break;
 
@@ -378,9 +392,26 @@ void FManager::_key_viewer()
 
 			//ESCAPE
 		case 27: {  _keyEscape(); }break;
+#else
+			//W
+		case 119: {  _keyUp(); }break;
+
+			//S
+		case 115: {  _keyDown(); }break;
+
+			//ENTER
+		case 10: {  _keyEnter(); }break;
+
+			//ESCAPE
+		case 27: {  _keyEscape(); }break;
+
+		
+#endif
+		default: {is_command=false;}break;
+					
+		
 		}
 
-		std::cout << std::endl << "ENTER - Refresh/Entry | ESC - Return\n";
 
 	}
 }

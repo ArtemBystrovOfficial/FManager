@@ -7,6 +7,7 @@ void printHelp()
 
 int main(int argc, char ** argv)
 {
+
 	std::string ip;
 	int port = -1;
 
@@ -60,7 +61,7 @@ int main(int argc, char ** argv)
 	}
 
 	// extra safe
-	if (ip.size() < 7 || ip.size() > 15 || port == -1 || std::count(ip.begin(), ip.end(), '.')!=3);
+	if (ip.size() < 7 || ip.size() > 15 || port == -1 || std::count(ip.begin(), ip.end(), '.')!=3 )
 	{
 		printHelp();
 		exit(0);
