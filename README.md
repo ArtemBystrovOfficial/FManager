@@ -1,4 +1,4 @@
-# FManager - manage your FServer 2.0 project faster
+# FManager - manage your [FServer 2.0](https://github.com/ArtemBystrovOfficial/FServer2.0) project faster
 
 <span>
 <img src ="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/>
@@ -42,7 +42,88 @@
  ────────────────
  ENTER - Refresh/Entry | ESC - Return | UP / DOWN - MOVE
 ```
-## install
+## Install
 
+- 'clone' repository
+- use 'cmake' and 'make' for build
+- try testing 'build/app' on your platform
+```diff
+- not edit files, if you want more free use [FServer2.0](https://github.com/ArtemBystrovOfficial/FServer2.0)
+```
+- go to next steps
+____
+## Configure
+`MainPocket.hpp` - edit your pocket how you need it, make any static members of classes, which you need to send
+
+```c++
+#pragma once
+
+struct MainPocket
+{
+
+    //There your data
+    
+//DON'T EDIT BELOW
+
+    friend std::string & operator+=(std::string& left, const MainPocket& pocket);
+};
+
+std::string & operator+=(std::string& left,const MainPocket& pocket);
+
+```   
+                                                                                      
+`MainPocket.cpp` - add to string your information about pocket, which you can see at Logs in `manager` 
+```c++                                                                                
+#include "MainPocket.hpp"
+
+std::string& operator+=(std::string& log, const MainPocket& pocket)
+{
+
+    log += "n : "; 
+    log += std::to_string(pocket.n);
+
+    // Before your logs operator for struct
+
+    return log;
+}
+```
+
+`Config.cpp` - main off manager all logic write this, use this like [FServer2.0 | Doc](https://github.com/ArtemBystrovOfficial/FServer2.0) but:
+- *srv - member of FServer use all operations with him
+- manager clean himself after work, you can not care about it
+- 3 rules which make your work easy:
+  - start with `srv->start()`;
+  - use while `(!_exit_app.load()) {}` for loop recv
+  - using `Out` for <<
+
+```c++
+#include "FManager.hpp"
+
+using Out = _Out<MainPocket>;
+
+void FManager::realisationOfCLogic() { 
+	
+	srv->start();
+
+	std::pair <MainPocket, int > pocket_recv;
+
+	while (!_exit_app.load()) {
+
+		*srv >> pocket_recv;
+
+		auto& [pocket, fid] = pocket_recv;
+
+		pocket.n *= 2;
+
+		*srv << Out{ pocket , FType::FID, fid };
+
+	}
+
+}
+
+```
+_________
+
+##
 
 
