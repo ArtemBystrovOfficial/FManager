@@ -94,7 +94,7 @@ std::string& operator+=(std::string& log, const MainPocket& pocket)
 - manager clean himself after work, you can not care about it
 - 3 rules which make your work easy:
   - start with `srv->start()`;
-  - use while `(!_exit_app.load()) {}` for loop recv
+  - use `while (!_exit_app.load()) {}` for loop recv
   - using `Out` for <<
 
 ```c++
