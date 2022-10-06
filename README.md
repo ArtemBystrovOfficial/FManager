@@ -9,7 +9,7 @@
 ## For what?
 
 ```diff
-! The Server 2.0 library is a medium level of abstraction. <br/>
+! The Server 2.0 library is a medium level of abstraction. 
 ```
 
 ```diff
@@ -124,6 +124,8 @@ void FManager::realisationOfCLogic() {
 ```
 _________
 
-##
+## Feedback
+:email: bystrov.official.one@gmail.com
 
+![logo](https://user-images.githubusercontent.com/92841151/163685103-54875fdc-2b7d-4e54-b73e-6564479622c6.png)
 
