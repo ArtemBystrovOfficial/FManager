@@ -44,7 +44,8 @@
 ```
 ## Install
 
-- 'clone' repository
+- 'clone' repository on `Linux` or `Windows`
+- download submodules git `submodule update --init --force --remote`
 - use 'cmake' and 'make' for build
 - try testing 'build/app' on your platform
 ```diff
