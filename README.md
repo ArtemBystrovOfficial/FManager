@@ -49,7 +49,7 @@
 - use 'cmake' and 'make' for build
 - try testing 'build/app' on your platform
 ```diff
-- not edit files, if you want more free use [FServer2.0](https://github.com/ArtemBystrovOfficial/FServer2.0)
+- not edit files, if you want more free, use FServer 2.0
 ```
 - go to next steps
 ____
