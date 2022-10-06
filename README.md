@@ -1,4 +1,4 @@
-# FManager - manage your [FServer 2.0](https://github.com/ArtemBystrovOfficial/FServer2.0) project faster
+# ![logo](https://user-images.githubusercontent.com/92841151/194349274-67019ddb-81a4-4d17-a03f-7e52cb541845.png) FManager - manage your [FServer 2.0](https://github.com/ArtemBystrovOfficial/FServer2.0) project faster
 
 <span>
 <img src ="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/>
