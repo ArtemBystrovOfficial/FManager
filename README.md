@@ -16,6 +16,10 @@
 + But you can independently think of a plan to create your server separate from the client
 + And use console interface, which setup in cpp.
 ```
+```diff
+- If you want to use 6 level of OSI and more, please download useful additions from FTools repository
+
+```
 ## Interface
 
 ```
