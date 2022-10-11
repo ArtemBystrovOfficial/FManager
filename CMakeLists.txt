@@ -8,17 +8,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(app main.cpp FManager.cpp Config.cpp MainPocket.cpp)
-add_executable(client Client.cpp MainPocket.cpp)
+add_executable(server main.cpp FManager.cpp Config.cpp MainPocket.cpp Tasks.cpp)
 
-target_compile_features(app PRIVATE cxx_std_17)
-target_compile_features(client PRIVATE cxx_std_17)
+target_compile_features(server PRIVATE cxx_std_17)
 
 add_subdirectory(libs/FServer2.0/FServer2_0)
 
-target_link_libraries(app PRIVATE libFS)
-target_link_libraries(client PRIVATE libFC)
+target_link_libraries(server PRIVATE libFS)
 
-set(CMAKE_CXX_FLAGS "-pthread")
+set( CMAKE_CXX_FLAGS "-pthread" )
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/bin)
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/bin )

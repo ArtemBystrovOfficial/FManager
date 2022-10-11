@@ -1,18 +1,42 @@
 #pragma once
 
 #include <iostream>
-#include <cstring>
 #include <string>
+
+// N - count of channels
+// M - count of ranges
+const int N = 8;
 
 struct MainPocket
 {
 
-    int n;
-   
+    enum class function
+    {
+        stopMeasure,
+        startMeasure,
+        setRange,
+        getStatus,
+        getRusult
+    };
+    
+    enum class codeState
+    {
+        error_state,
+        idle_state,
+        measure_state,
+        busy_state
+    };
 
-    ///////////////////////
-    // Before your data
-    ///////////////////////
+    codeState code;
+
+    function func;
+
+    int32_t channel, range;
+
+    bool isOk;
+
+    float result;
+
     
 //DON'T EDIT BELOW
 
