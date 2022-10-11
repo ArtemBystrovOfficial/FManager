@@ -5,7 +5,6 @@
 
 // N - count of channels
 // M - count of ranges
-const int N = 8;
 
 struct MainPocket
 {
@@ -16,7 +15,7 @@ struct MainPocket
         startMeasure,
         setRange,
         getStatus,
-        getRusult
+        getResult
     };
     
     enum class codeState
