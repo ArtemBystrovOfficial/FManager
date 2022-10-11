@@ -2,6 +2,8 @@
 
 using namespace std::chrono_literals;
 
+#include <iostream>
+
 ///////////////
 // TASK
 ///////////////
@@ -36,9 +38,21 @@ std::optional<float> Task::getResult()
 	return _state.load()->getResult();
 }
 
+void Task::_run_process()
+{
+
+	run = std::thread([this]
+		{
+			_process();
+		});
+}
+
 void Task::_process()
 {
 	// 10s - 20s
+
+	srand(time(0));
+
 	int rand_time_working = rand() % 10000 + 10000;
 
 	int out = 0; // some work
@@ -49,15 +63,15 @@ void Task::_process()
 	if (!error_chance)
 	{
 		_state.store(new Error(this));
-			return;
+		return;
 	}
-
-	_is_working.store(true);
 
 	while (_is_working.load() && rand_time_working--)
 	{
 		out += rand() % 2;
-		std::this_thread::sleep_for(1ms);
+
+		// simulation of work
+		std::this_thread::sleep_for(1000ns);
 	}
 
 	if (!_is_working.load())
@@ -75,6 +89,7 @@ void Task::_process()
 
 void Task::SetState(State* state)
 {
+
 	if (_state.load())
 		delete _state.load();
 
@@ -88,10 +103,9 @@ void Task::SetState(State* state)
 
 bool Free::start()
 {
-	task->run = std::thread([&]
-		{
-			task->_process();
-		});
+	task->_is_working.store(true);
+
+	task->_run_process();
 
 	task->SetState(new Working(task));
 
@@ -169,8 +183,13 @@ bool GetResult::stop()
 
 std::optional<float> GetResult::getResult()
 {
+	//extra wait of end
+	if (task->run.joinable())
+		task->run.join();
+
+	auto out = std::optional<float>(task->result.load() * task->range);
 
 	task->SetState(new Free(task));
 
-	return std::optional<float>(task->result.load());
+	return out;
 }

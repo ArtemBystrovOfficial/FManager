@@ -37,28 +37,32 @@ public:
 	StatusTask getStatus();
 
 	std::optional <float> getResult();
-	
+
 	~Task()
 	{
+
+		_is_working.store(false);
+
+		if (run.joinable())
+			run.join();
+
 		//safety work with row pointers
 		if (_state.load())
 			delete _state.load();
 
-		_is_working.store(false);
-
-		run.join();
-
 	}
 
-public:
+private:
+
+	void _run_process();
 
 	void _process();
 
 	void SetState(State* state);
 
-	std::atomic < State * > _state;
+	std::atomic < State* > _state;
 
-	float range;
+	float range = 1.0;
 	std::atomic <float> result;
 
 	//thread procces
@@ -72,14 +76,14 @@ class State
 {
 public:
 
-	State(Task * task) : task(task) {};
+	State(Task* task) : task(task) {};
 
-	virtual bool start() {};
+	virtual bool start() = 0;
 
-	virtual bool stop() {};
+	virtual bool stop() = 0;
 
-	bool setRange(int range){
-	
+	bool setRange(int range) {
+
 		float kof;
 
 		switch (range)
@@ -97,7 +101,7 @@ public:
 
 	};
 
-	virtual std::optional <float> getResult() {};
+	virtual std::optional <float> getResult() = 0;
 
 	StatusTask getStatus()
 	{
@@ -115,7 +119,7 @@ class Free : public State
 {
 public:
 
-	Free(Task* task) : State(task){
+	Free(Task* task) : State(task) {
 		status = StatusTask::Free;
 	};
 
@@ -132,7 +136,7 @@ class Working : public State
 {
 public:
 
-	Working(Task* task) : State(task){
+	Working(Task* task) : State(task) {
 		status = StatusTask::Working;
 	};
 
