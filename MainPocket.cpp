@@ -1,15 +1,12 @@
 #include "MainPocket.hpp"
 
-
-std::string& operator+=(std::string& left, const MainPocket& pocket)
+std::string& operator+=(std::string& log, const MainPocket& pocket)
 {
 
-    left += "msg : "; 
-    left += pocket.msg;
+    //left += "n : "; 
+    //left += std::to_string(pocket.n);
 
-    /////////////////////////////////////////
     // Before your logs operator for struct
-    ////////////////////////////////////////
 
-    return left;
+    return log;
 }
