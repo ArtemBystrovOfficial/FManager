@@ -23,7 +23,7 @@ void FManager::realisationOfCLogic() {
 	std::pair <MainPocket, int > pocket_recv;
 
 	//chanels
-	std::vector <Task> tasks;
+	std::vector <Task> tasks(N);
 
 	using cs = MainPocket::codeState;
 

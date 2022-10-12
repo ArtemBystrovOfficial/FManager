@@ -49,7 +49,7 @@ void Task::_run_process()
 
 void Task::_process()
 {
-	// 10s - 20s
+	// 30s - 60s
 
 	srand(time(0));
 
@@ -71,6 +71,7 @@ void Task::_process()
 		out += rand() % 2;
 
 		// simulation of work
+		// 15s - 30s
 		std::this_thread::sleep_for(1000ns);
 	}
 
@@ -84,6 +85,7 @@ void Task::_process()
 	_is_working.store(false);
 
 	_state.store(new GetResult(this));
+
 
 }
 
