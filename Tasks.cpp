@@ -72,7 +72,15 @@ void Task::_process()
 
 		// simulation of work
 		// 15s - 30s
+		#ifdef WIN32
+
 		std::this_thread::sleep_for(1000ns);
+
+		#else
+
+		std::this_thread::sleep_for(2ms);
+
+		#endif
 	}
 
 	if (!_is_working.load())
