@@ -4,6 +4,11 @@
 #include <optional>
 #include <atomic>
 
+class State;
+class Free;
+class Working;
+class Error;
+class GetResult;
 
 // use Pattern State
 enum class StatusTask
